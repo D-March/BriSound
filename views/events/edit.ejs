@@ -1,0 +1,68 @@
+<% layout('layouts/boilerplate')%>
+
+    <div class="row text-center">
+        <h1 class="text-center">Edit Event</h1>
+        <div class="col-6 offset-3">
+            <form action="/events/<%= event._id %>?_method=PUT" method='POST' class='validated-form' novalidate>
+                <div class='mb-3'>
+                    <label class='form-label' for="title">Title</label>
+                    <input class='form-control' type="text" id='title' name='event[title]' value='<%= event.title %>' required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                </div>
+                <div class='mb-3'>
+                    <label class='form-label' for="location">Location</label>
+                    <input class='form-control' type="text" id='location' name='event[location]' value='<%= event.location %>' required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col mb-3">
+                        <label class='form-label' for="time">Time</label>
+                        <input type="time" class="form-control" placeholder="<%= event.time %>" aria-label="Time" id='time' name='event[time]' value='<%= event.time %>' required>
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div>
+                    </div>
+                    <div class="col mb-3">
+                        <label class='form-label' for="date">Date</label>
+                        <input type="date" class="form-control" placeholder="<%= event.date %>" aria-label="Date" id='date' name='event[date]' value='<%= event.date %>' required>
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div>
+                    </div>
+                </div>
+                <div class='mb-3'>
+                    <label class='form-label' for="image">Image URL</label>
+                    <input class='form-control' type="text" id='image' name='event[image]' value='<%= event.image %>' required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class='form-label' for="price">Ticket Price</label>
+                    <div class="input-group">
+                        <span class="input-group-text" id="price-label">£</span>
+                        <input type="text" id='price' class="form-control" placeholder="0.00" aria-label="price" aria-describedby="price-label" name='event[price]' value='<%= event.price %>' required>
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div>
+                    </div>
+                </div>
+
+                <div class='mb-3'>
+                    <label class='form-label' for="description">Description</label>
+                    <textarea class='form-control' rows='6' type="text" id='description' name='event[description]' required><%= event.description %></textarea>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <button class='btn btn-info'>Update Event</button>
+                </div>
+            </form>
+            <a href="/events/<%= event._id %>">Back to Event</a>
+        </div>
+    </div>

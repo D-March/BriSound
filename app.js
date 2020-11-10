@@ -1,64 +1,100 @@
-const	express 		= require('express'),
-		app 			= express(),
-		bodyParser 		= require("body-parser"),
-		mongoose 		= require("mongoose"),
-	  	flash			= require('connect-flash'),
-		passport		= require('passport'),
-	  	LocalStrategy 	= require('passport-local'),
-	  	Campground 		= require("./models/campground"),
-	  	Comment			= require('./models/comment'),
-	  	User			= require('./models/user'),
-		methodOverride	= require('method-override');
+const express = require("express");
+const path = require('path');
+const mongoose = require('mongoose');
+const ejsMate = require('ejs-mate');
+const session = require('express-session');
+const flash = require('connect-flash');
+const ExpressError = require("./utils/ExpressError");
+const moment = require("moment");
+const methodOverride = require('method-override');
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
+const User = require('./models/user');
 
-//REQUIRING ROUTES
-const commentRoutes			= require('./routes/comments'),
-	  campgroundRoutes 		= require('./routes/campgrounds'),
-	  indexRoutes 			= require('./routes/index');
+const eventRoutes = require('./routes/events');
+const reviewRoutes = require('./routes/reviews');
+const userRoutes = require('./routes/users');
 
-mongoose.set('useFindAndModify', false);
 
-mongoose.connect('mongodb://localhost:27017/bri_sound', {  
-	useNewUrlParser: true,
-    useCreateIndex: true, 
-    useUnifiedTopology: true
-}).then(() =>{
-	console.log('Connected to Database');
-}).catch(err => {
-	console.log('ERROR:', err.message);
+mongoose.connect("mongodb://localhost:27017/BriSound", {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
 });
 
-app.use(bodyParser.urlencoded({extended: true}));
-app.set('view engine', 'ejs');
-app.use(express.static(__dirname + "/public"));
-app.use(methodOverride('_method'));
-app.use(flash());
+const db = mongoose.connection;
+db.on("error", console.error.bind(console, "Connection error:"));
+db.once("open", () => {
+    console.log("Database Connected...");
+});
 
-//PASSPORT CONFIG.
-app.use(require('express-session')({
-	secret: 'Once again dogs are the best',
-	resave: false,
-	saveUninitialized: false
-}));
+const app = express();
+
+app.engine('ejs', ejsMate);
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+
+app.use(express.urlencoded({extended: true}));
+app.use(methodOverride('_method'));
+app.use(express.static(path.join(__dirname, 'public')));
+
+const sessionConfig = {
+    secret: 'groovytunes',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: true,
+        expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+        maxAge: 1000 * 60 * 60 * 24 * 7,
+    }
+}
+app.use(session(sessionConfig));
+app.use(flash());
 
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
+
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+app.use((req, res, next)=>{
+    res.locals.moment = moment;
+    next();
+    });
+
 app.use((req, res, next) => {
-	res.locals.currentUser = req.user;
-	res.locals.error = req.flash('error');
-	res.locals.success = req.flash('success');
-	next();
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error');
+    next();
 });
 
-app.use('/', indexRoutes);
-app.use("/campgrounds/:id/comments", commentRoutes);
-app.use("/campgrounds", campgroundRoutes);
+app.get('/fakeUser', async(req, res) => {
+    const user = new User({email: 'damoooo@gmail.com', username: 'Damoooo'});
+    const newUser = await User.register(user, 'chicken');
+    res.send(newUser);
+})
+
+app.use('/', userRoutes);
+app.use('/events', eventRoutes);
+app.use('/events/:id/reviews', reviewRoutes);
+
+app.get("/", (req, res) => {
+    res.render("home");
+});
+
+app.all('*', (req, res, next) => {
+    next(new ExpressError('Page Not Found', 404))
+});
+
+app.use((err, req, res, next) => {
+    const { statusCode = 500 } = err;
+    if(!err.message) err.message = 'Something went wrong!';
+    res.status(statusCode).render('error', { err });
+});
 
 
-var port = process.env.PORT || 3000
-app.listen(port, () => { 
-	console.log('Server has started...'); 
+app.listen(3000, () => {
+    console.log("Serving on port 3000");
 });

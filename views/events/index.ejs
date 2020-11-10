@@ -1,0 +1,33 @@
+<% layout('layouts/boilerplate')%>
+
+<h1>All Events</h1>
+    <div>
+        <a href="/events/new">Add Event</a>
+    </div>
+
+    <div class='container'>
+        <% for (let event of events) {%>
+	            <div class='row'>
+                    <div class="card col-sm" mb-3>
+                        <div class="row">
+                            <div class='col-md-4'>
+                                <img class="img-fluid" alt="" src='<%=event.image%>'>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title"><%= event.title %></h5>
+                                    <p class="card-text"><%= event.description %></p>
+                                    <p class="card-text">
+                                        <small class="text-muted">Location: <%= event.location %></small>
+                                    </p>
+                                    <p class="card-text">
+                                        <small class="text-muted">Date/Time: <%= moment(event.date).format('Do MMMM, YYYY')  %> at <%= event.time %></small>
+                                    </p>
+                                    <a class='btn btn-primary' href="/events/<%= event._id %>"> More Info</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+	            </div>
+        <% } %>
+    </div>
