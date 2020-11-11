@@ -12,6 +12,15 @@
           <a class="nav-link" href="/events">Events</a>
           <a class="nav-link" href="/events/new">Create Event</a>
         </div>
+        <div class="navbar-nav ml-auto">
+          <% if(!currentUser) {%>
+          <a class='nav-link' href="/login">Login</a>
+          <a class='nav-link' href="/register">Sign Up</a>
+          <% } else { %>
+          <a class='nav-link' href="">Signed in as <%= currentUser.username %></a>
+          <a class='nav-link' href="/logout">Logout</a>
+          <% } %>
+        </div>
       </div>
     </div>
   </nav>
