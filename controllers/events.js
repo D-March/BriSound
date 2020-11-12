@@ -1,4 +1,5 @@
 const Event = require('../models/event');
+const { cloudinary } = require("../cloudinary");
 
 module.exports.index = async (req, res) => {
     const events = await Event.find({});
@@ -11,8 +12,10 @@ module.exports.renderNewForm = (req, res) => {
 
 module.exports.createEvent = async (req, res, next) => {
     const event = new Event(req.body.event);
+    event.images = req.files.map(f => ({ url: f.path, filename: f.filename }));
     event.author = req.user._id;
     await event.save();
+    console.log(event);
     req.flash('success', 'Successfully added a new event!');
     res.redirect(`/events/${event._id}`);
 };
@@ -43,7 +46,17 @@ module.exports.renderEditForm = async (req, res) => {
 
 module.exports.updateEvent = async(req, res) => {
     const { id } = req.params;
+    console.log(req.body);
     const event = await Event.findByIdAndUpdate(id, {...req.body.event });
+    const imgs = req.files.map(f => ({ url: f.path, filename: f.filename }));
+    event.images.push(...imgs);
+    await event.save();
+    if(req.body.deleteImages) {
+        for(let filename of req.body.deleteImages){
+            await cloudinary.uploader.destroy(filename);
+        }
+        await event.updateOne({$pull: {images: {filename: {$in: req.body.deleteImages }}}})
+    }
     req.flash('success', 'Successfully updated event information.');
     res.redirect(`/events/${event._id}`);
 };

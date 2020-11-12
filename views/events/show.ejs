@@ -3,8 +3,26 @@
 
 <div class="row">
     <div class="col-6 text-center">
+        <div id="eventCarousel" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+                <% event.images.forEach((img, i) => {  %>
+                    <div class="carousel-item <%= i === 0 ? 'active' : '' %>">
+                        <img src="<%= img.url %>" class="d-block w-100" alt="">
+                    </div>
+                <% }) %>
+            </div>
+            <% if(event.images.length > 1) { %>
+                <a class="carousel-control-prev" href="#eventCarousel" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#eventCarousel" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </a>
+                <% } %>
+        </div>
         <div class="card mb-3">
-            <img src="<%= event.image %>" class="card-img-top" alt="...">
             <div class="card-body">
                 <h5 class="card-title"><%= event.title %></h5>
                 <p class="card-text"><%= event.description %></p>

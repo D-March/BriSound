@@ -3,7 +3,7 @@
     <div class="row text-center">
         <h1 class="text-center">Create Event</h1>
         <div class="col-6 offset-3">
-            <form action="/events" method='POST' class='validated-form' novalidate>
+            <form action="/events" method='POST' class='validated-form' novalidate enctype='multipart/form-data'>
                 <div class='mb-3'>
                     <label class='form-label' for="title">Title</label>
                     <input class='form-control' type="text" id='title' name='event[title]' required>
@@ -34,13 +34,6 @@
                         </div>
                     </div>
                 </div>
-                <div class='mb-3'>
-                    <label class='form-label' for="image">Image URL</label>
-                    <input class='form-control' type="text" id='image' name='event[image]' required>
-                    <div class="valid-feedback">
-                        Looks good!
-                    </div>
-                </div>
                 <div class="mb-3">
                     <label class='form-label' for="price">Ticket Price</label>
                     <div class="input-group">
@@ -58,6 +51,13 @@
                     <div class="valid-feedback">
                         Looks good!
                     </div>
+                </div>
+                <div class="form-file custom-file mb-3">
+                    <input type="file" class="form-file-input" id="image" name="image" multiple>
+                    <label class="form-file-label" for="image">
+                        <span class="form-file-text  custom-file-label">Choose image(s)...</span>
+                        <span class="form-file-button">Browse</span>
+                    </label>
                 </div>
                 <div class="mb-3">
                     <button class='btn btn-success'>Add Event</button>

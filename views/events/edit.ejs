@@ -3,7 +3,7 @@
     <div class="row text-center">
         <h1 class="text-center">Edit Event</h1>
         <div class="col-6 offset-3">
-            <form action="/events/<%= event._id %>?_method=PUT" method='POST' class='validated-form' novalidate>
+            <form action="/events/<%= event._id %>?_method=PUT" method='POST' class='validated-form' novalidate enctype='multipart/form-data'>
                 <div class='mb-3'>
                     <label class='form-label' for="title">Title</label>
                     <input class='form-control' type="text" id='title' name='event[title]' value='<%= event.title %>' required>
@@ -34,13 +34,6 @@
                         </div>
                     </div>
                 </div>
-                <div class='mb-3'>
-                    <label class='form-label' for="image">Image URL</label>
-                    <input class='form-control' type="text" id='image' name='event[image]' value='<%= event.image %>' required>
-                    <div class="valid-feedback">
-                        Looks good!
-                    </div>
-                </div>
                 <div class="mb-3">
                     <label class='form-label' for="price">Ticket Price</label>
                     <div class="input-group">
@@ -58,6 +51,22 @@
                     <div class="valid-feedback">
                         Looks good!
                     </div>
+                </div>
+                <div class="form-file custom-file mb-3">
+                    <input type="file" class="form-file-input" id="image" name="image" multiple>
+                    <label class="form-file-label" for="image">
+                        <span class="form-file-text  custom-file-label">Add more image(s)...</span>
+                        <span class="form-file-button">Browse</span>
+                    </label>
+                </div>
+                <div class="mb-3">
+                    <% event.images.forEach(function(img, i) { %>
+                    <img src="<%= img.thumbnail %>" class="img-thumbnail mb-2" alt="">
+                    <div class="form-check-inline">
+                        <input type="checkbox" id="image-<%=i%>" name="deleteImages[]" value="<%= img.filename %>">
+                    </div>
+                    <label for="image-<%=i%>">Delete</label>
+                    <% }) %>
                 </div>
                 <div class="mb-3">
                     <button class='btn btn-info'>Update Event</button>
