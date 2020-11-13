@@ -24,7 +24,7 @@ module.exports = [
         longitude: ,
     },
     {
-        name: 'O2 ',
+        name: 'O2 Academy',
         city: 'Bristol',
         latitude: ,
         longitude: ,
