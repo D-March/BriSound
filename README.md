@@ -1,4 +1,4 @@
-# BriSound v2.0.0 [<img src="https://img.shields.io/static/v1?label=Demo&message=Live&color=red" width="130"/>](https://brisound.herokuapp.com) [<img src="https://img.shields.io/static/v1?label=Demo&message=Video&color=red" width="130"/>](https://youtu.be/YQB-6mwdl3g)
+# BriSound v2.0.0 [<img src="https://img.shields.io/static/v1?label=Demo&message=Live&color=red" width="120"/>](https://brisound.herokuapp.com) [<img src="https://img.shields.io/static/v1?label=Demo&message=Video&color=red" width="130"/>](https://youtu.be/YQB-6mwdl3g)
 
 A guide to local music events in and around the Bristol area.
 
